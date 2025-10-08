@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Saúde - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-large">
+                    <i class="fas fa-calendar-check"></i>
+                    <h1>Agenda Saúde</h1>
+                </div>
+                <p class="login-subtitle">Consultas sem complicação, saúde com organização</p>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail" class="form-label">E-mail</label>
+                    <input type="email" id="loginEmail" class="form-input" placeholder="seu@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginSenha" class="form-label">Senha</label>
+                    <input type="password" id="loginSenha" class="form-input" placeholder="Sua senha" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginTipoUsuario" class="form-label">Tipo de Usuário</label>
+                    <select id="loginTipoUsuario" class="form-select" required>
+                        <option value="">Selecione o tipo de usuário</option>
+                        <option value="paciente">Paciente</option>
+                        <option value="medico">Médico</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Entrar no Sistema
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>Não tem cadastro? <a href="#" id="btnCadastro">Cadastre-se como paciente</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <div id="modalCadastro" class="modal">
+        <div class="modal-content modal-md">
+            <div class="modal-header">
+                <h3>Cadastro de Paciente</h3>
+                <button class="modal-close" onclick="fecharModalCadastro()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formCadastroPaciente">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="cadNome">Nome Completo *</label>
+                            <input type="text" id="cadNome" class="form-input" placeholder="Seu nome completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cadCpf">CPF *</label>
+                            <input type="text" id="cadCpf" class="form-input" placeholder="000.000.000-00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cadEmail">E-mail *</label>
+                            <input type="email" id="cadEmail" class="form-input" placeholder="seu@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cadTelefone">Telefone *</label>
+                            <input type="tel" id="cadTelefone" class="form-input" placeholder="(00) 00000-0000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cadDataNascimento">Data de Nascimento *</label>
+                            <input type="date" id="cadDataNascimento" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cadSenha">Senha *</label>
+                            <input type="password" id="cadSenha" class="form-input" placeholder="Mínimo 6 caracteres" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label for="cadConfirmarSenha">Confirmar Senha *</label>
+                            <input type="password" id="cadConfirmarSenha" class="form-input" placeholder="Digite a senha novamente" required minlength="6">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="fecharModalCadastro()">
+                            <i class="fas fa-times"></i>
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i>
+                            Cadastrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>

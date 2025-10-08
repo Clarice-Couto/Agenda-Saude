@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Saúde - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-calendar-check"></i>
+                <h1>Agenda Saúde</h1>
+            </div>
+            <nav class="nav">
+                <ul class="nav-list" id="navList">
+                    <!-- Menu será carregado dinamicamente baseado no tipo de usuário -->
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <span id="userName">Usuário</span>
+                <div class="user-dropdown">
+                    <button class="btn btn-sm" onclick="sair()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair
+                    </button>
+                </div>
+            </div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Seção Início -->
+        <section id="inicio" class="section active">
+            <div class="container">
+                <div class="hero">
+                    <div class="hero-content">
+                        <h2 class="hero-title" id="welcomeMessage">Bem-vindo ao Agenda Saúde</h2>
+                        <p class="hero-description" id="userDescription">Consultas sem complicação, saúde com organização</p>
+                        <div id="pacienteActions" style="display: none;">
+                            <button class="btn btn-primary" id="btnAgendarHero">
+                                <i class="fas fa-calendar-plus"></i>
+                                Agendar Consulta
+                            </button>
+                        </div>
+                        <div id="medicoActions" style="display: none;">
+                            <button class="btn btn-primary" onclick="mostrarSecao('agenda')">
+                                <i class="fas fa-calendar-alt"></i>
+                                Ver Minha Agenda
+                            </button>
+                        </div>
+                        <div id="adminActions" style="display: none;">
+                            <button class="btn btn-primary" onclick="mostrarSecao('admin')">
+                                <i class="fas fa-cogs"></i>
+                                Gerenciar Sistema
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <i class="fas fa-user-md"></i>
+                        <h3 id="medicosCount">0</h3>
+                        <p>Médicos Cadastrados</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3 id="pacientesCount">0</h3>
+                        <p>Pacientes Atendidos</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3 id="consultasCount">0</h3>
+                        <p>Consultas Realizadas</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Agendamento (Apenas para Pacientes) -->
+        <section id="agendar" class="section">
+            <div class="container">
+                <h2 class="section-title">Agendar Nova Consulta</h2>
+                <p class="section-subtitle">Escolha o médico, data e horário para sua consulta</p>
+                
+                <div class="agendamento-steps">
+                    <div class="step-indicator">
+                        <div class="step active" data-step="1">
+                            <span>1</span>
+                            <p>Escolher Médico</p>
+                        </div>
+                        <div class="step" data-step="2">
+                            <span>2</span>
+                            <p>Data e Hora</p>
+                        </div>
+                        <div class="step" data-step="3">
+                            <span>3</span>
+                            <p>Confirmação</p>
+                        </div>
+                    </div>
+
+                    <!-- Passo 1: Escolher Médico -->
+                    <div class="form-step active" id="step1">
+                        <h3>Selecionar Especialidade e Médico</h3>
+                        <div class="form-group">
+                            <label for="especialidade">Especialidade Médica *</label>
+                            <select id="especialidade" class="form-select" required>
+                                <option value="">Selecione uma especialidade</option>
+                            </select>
+                        </div>
+                        
+                        <div class="medicos-grid" id="medicosGrid">
+                            <!-- Médicos carregados via JavaScript -->
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="voltarParaInicio()">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep(2)" id="btnStep1">Próximo</button>
+                        </div>
+                    </div>
+
+                    <!-- Passo 2: Data e Hora -->
+                    <div class="form-step" id="step2">
+                        <h3>Selecionar Data e Horário</h3>
+                        <div class="calendar-container">
+                            <div class="calendar-header">
+                                <button class="btn-calendar" onclick="changeMonth(-1)">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <h4 id="currentMonth"></h4>
+                                <button class="btn-calendar" onclick="changeMonth(1)">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="calendar" id="calendar">
+                                <!-- Calendário gerado via JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="horarios-container">
+                            <h4>Horários Disponíveis</h4>
+                            <div class="horarios-grid" id="horariosGrid">
+                                <!-- Horários carregados via JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep(1)">Voltar</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep(3)" id="btnStep2" disabled>Próximo</button>
+                        </div>
+                    </div>
+
+                    <!-- Passo 3: Confirmação -->
+                    <div class="form-step" id="step3">
+                        <h3>Confirmar Agendamento</h3>
+                        <div class="resumo-agendamento">
+                            <div class="resumo-item">
+                                <strong>Paciente:</strong>
+                                <span id="resumoNome"></span>
+                            </div>
+                            <div class="resumo-item">
+                                <strong>Médico:</strong>
+                                <span id="resumoMedico"></span>
+                            </div>
+                            <div class="resumo-item">
+                                <strong>Especialidade:</strong>
+                                <span id="resumoEspecialidade"></span>
+                            </div>
+                            <div class="resumo-item">
+                                <strong>Data:</strong>
+                                <span id="resumoData"></span>
+                            </div>
+                            <div class="resumo-item">
+                                <strong>Horário:</strong>
+                                <span id="resumoHorario"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="observacoes">Observações (opcional)</label>
+                            <textarea id="observacoes" class="form-textarea" placeholder="Alguma observação importante..."></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Voltar</button>
+                            <button type="button" class="btn btn-success" onclick="finalizarAgendamento()">
+                                <i class="fas fa-check"></i>
+                                Confirmar Agendamento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Médicos (Apenas para Admin) -->
+        <section id="medicos" class="section">
+            <div class="container">
+                <h2 class="section-title">Nossa Equipe Médica</h2>
+                <p class="section-subtitle">Profissionais qualificados para seu cuidado</p>
+                <div class="filters">
+                    <select id="filterEspecialidade" class="form-select">
+                        <option value="">Todas as especialidades</option>
+                    </select>
+                    <input type="text" id="searchMedico" class="form-input" placeholder="Buscar médico...">
+                </div>
+                <div class="medicos-lista" id="medicosLista">
+                    <!-- Lista de médicos carregada via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Histórico (Para Todos) -->
+        <section id="historico" class="section">
+            <div class="container">
+                <h2 class="section-title" id="historicoTitle">Histórico de Consultas</h2>
+                <p class="section-subtitle" id="historicoSubtitle">Acompanhe todas as suas consultas</p>
+                <div class="filters">
+                    <select id="filterStatus" class="form-select">
+                        <option value="">Todos os status</option>
+                        <option value="agendado">Agendado</option>
+                        <option value="realizado">Realizado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                    <input type="month" id="filterMes" class="form-input">
+                </div>
+                <div class="consultas-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Médico</th>
+                                <th>Especialidade</th>
+                                <th>Paciente</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historicoBody">
+                            <!-- Histórico carregado via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Agenda Médico (Apenas para Médicos) -->
+        <section id="agenda" class="section">
+            <div class="container">
+                <h2 class="section-title">Minha Agenda</h2>
+                <p class="section-subtitle">Suas consultas e compromissos</p>
+                <div class="filters">
+                    <input type="date" id="filterDataAgenda" class="form-input">
+                    <select id="filterStatusAgenda" class="form-select">
+                        <option value="">Todos os status</option>
+                        <option value="agendado">Agendado</option>
+                        <option value="realizado">Realizado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                </div>
+                <div class="consultas-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Paciente</th>
+                                <th>Telefone</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="agendaBody">
+                            <!-- Agenda carregada via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Admin (Apenas para Admin) -->
+        <section id="admin" class="section">
+            <div class="container">
+                <h2 class="section-title">Área Administrativa</h2>
+                <p class="section-subtitle">Gerencie o sistema Agenda Saúde</p>
+                <div class="admin-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="cadastro-medico">Cadastrar Médico</button>
+                        <button class="tab-btn" data-tab="gerenciar-usuarios">Gerenciar Usuários</button>
+                        <button class="tab-btn" data-tab="config-horarios">Configurar Horários</button>
+                        <button class="tab-btn" data-tab="relatorios">Relatórios</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="cadastro-medico">
+                        <h3>Cadastrar Novo Médico</h3>
+                        <form id="formMedico">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="medicoNome">Nome Completo *</label>
+                                    <input type="text" id="medicoNome" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="medicoCRM">CRM *</label>
+                                    <input type="text" id="medicoCRM" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="medicoEspecialidade">Especialidade *</label>
+                                    <select id="medicoEspecialidade" class="form-select" required>
+                                        <option value="">Selecione a especialidade</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="medicoTelefone">Telefone</label>
+                                    <input type="tel" id="medicoTelefone" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="medicoEmail">E-mail *</label>
+                                    <input type="email" id="medicoEmail" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="medicoSenha">Senha *</label>
+                                    <input type="password" id="medicoSenha" class="form-input" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Cadastrar Médico
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="tab-content" id="gerenciar-usuarios">
+                        <h3>Gerenciar Usuários</h3>
+                        <div class="users-grid">
+                            <div class="user-type-section">
+                                <h4>Pacientes Cadastrados</h4>
+                                <div class="users-list" id="listaPacientes">
+                                    <!-- Lista de pacientes -->
+                                </div>
+                            </div>
+                            <div class="user-type-section">
+                                <h4>Médicos Cadastrados</h4>
+                                <div class="users-list" id="listaMedicosAdmin">
+                                    <!-- Lista de médicos -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="config-horarios">
+                        <h3>Configurar Horários de Trabalho</h3>
+                        <div class="form-group">
+                            <label for="horarioInicio">Horário de Início</label>
+                            <input type="time" id="horarioInicio" class="form-input" value="08:00">
+                        </div>
+                        <div class="form-group">
+                            <label for="horarioFim">Horário de Término</label>
+                            <input type="time" id="horarioFim" class="form-input" value="17:00">
+                        </div>
+                        <div class="form-group">
+                            <label for="intervalo">Intervalo entre Consultas (minutos)</label>
+                            <input type="number" id="intervalo" class="form-input" value="30" min="15" max="60">
+                        </div>
+                        <button class="btn btn-primary" onclick="salvarConfigHorarios()">
+                            <i class="fas fa-save"></i>
+                            Salvar Configurações
+                        </button>
+                    </div>
+                    
+                    <div class="tab-content" id="relatorios">
+                        <h3>Relatórios e Estatísticas</h3>
+                        <div class="relatorios-grid">
+                            <div class="relatorio-card">
+                                <h4>Consultas por Mês</h4>
+                                <div class="relatorio-grafico" id="graficoConsultas">
+                                    <!-- Gráfico será gerado via JavaScript -->
+                                </div>
+                            </div>
+                            <div class="relatorio-card">
+                                <h4>Médicos Mais Procurados</h4>
+                                <div class="relatorio-lista" id="listaMedicosTop">
+                                    <!-- Lista será gerada via JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="gerarRelatorio()">
+                            <i class="fas fa-download"></i>
+                            Exportar Relatório
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Confirmação -->
+    <div id="modalConfirmacao" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Agendamento Confirmado!</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <p>Sua consulta foi agendada com sucesso!</p>
+                <div class="agendamento-info">
+                    <p><strong>Protocolo:</strong> <span id="protocolo"></span></p>
+                    <p><strong>Data:</strong> <span id="modalData"></span></p>
+                    <p><strong>Horário:</strong> <span id="modalHorario"></span></p>
+                </div>
+                <div class="lembrete">
+                    <i class="fas fa-bell"></i>
+                    <span>Você receberá um lembrete 24h antes da consulta</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal de Confirmação de Exclusão -->
+<div id="modalConfirmacaoExclusao" class="modal">
+    <div class="modal-content modal-confirm">
+        <div class="modal-header">
+            <h3>Confirmar Exclusão</h3>
+            <button class="modal-close" onclick="fecharModalExclusao()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="warning-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <p id="mensagemExclusao">Tem certeza que deseja excluir este médico?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="fecharModalExclusao()">
+                <i class="fas fa-times"></i>
+                Cancelar
+            </button>
+            <button class="btn btn-danger" id="btnConfirmarExclusao">
+                <i class="fas fa-trash"></i>
+                Confirmar Exclusão
+            </button>
+        </div>
+    </div>
+</div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Agenda Saúde - Consultas sem complicação, saúde com organização</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
